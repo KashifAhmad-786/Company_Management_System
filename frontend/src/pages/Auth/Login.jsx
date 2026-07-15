@@ -6,7 +6,7 @@ import { Shield, Mail, Lock, AlertCircle, ArrowRight } from 'lucide-react';
 const Login = () => {
   const { login, authError, clearError } = useAuth();
   const navigate = useNavigate();
-  const apiBaseUrl = (import.meta.env.VITE_API_URL || 'http://localhost:5000/api').replace(/\/$/, '');
+  const apiBaseUrl = (import.meta.env.VITE_API_URL || 'https://company-management-system-nocn.vercel.app/api').replace(/\/$/, '');
   const [searchParams] = useSearchParams();
 
   const [email, setEmail] = useState('');
