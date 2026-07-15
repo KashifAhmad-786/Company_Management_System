@@ -19,6 +19,8 @@ const {
   validateResetPassword
 } = require('../utils/validation');
 
+const FRONTEND_URL = process.env.FRONTEND_URL || 'https://company-management-system-mu.vercel.app';
+
 const router = express.Router();
 
 // Local auth routes
@@ -42,7 +44,7 @@ router.get(
 router.get(
   '/google/callback',
   passport.authenticate('google', { 
-    failureRedirect: `${process.env.FRONTEND_URL || 'http://localhost:5173'}/login?error=google_auth_failed`, 
+    failureRedirect: `${FRONTEND_URL}/login?error=google_auth_failed`, 
     session: false 
   }),
   googleAuthSuccess

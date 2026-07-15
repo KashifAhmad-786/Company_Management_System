@@ -2,6 +2,8 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const { sendOtpEmail, sendResetPasswordEmail } = require('../services/emailService');
 
+const FRONTEND_URL = process.env.FRONTEND_URL || 'https://company-management-system-mu.vercel.app';
+
 // Helper to generate access token
 const generateAccessToken = (user) => {
   return jwt.sign(
@@ -311,7 +313,7 @@ const logout = async (req, res, next) => {
 const googleAuthSuccess = async (req, res, next) => {
   try {
     if (!req.user) {
-      return res.redirect(`${process.env.FRONTEND_URL}/login?error=Google auth failed`);
+      return res.redirect(`${FRONTEND_URL}/login?error=Google auth failed`);
     }
 
     const user = req.user;
@@ -320,12 +322,12 @@ const googleAuthSuccess = async (req, res, next) => {
     if (!user.isVerified) {
       // Redirect to OTP verification page on the frontend
       return res.redirect(
-        `${process.env.FRONTEND_URL || 'http://localhost:5173'}/verify-otp?email=${encodeURIComponent(user.email)}&status=unverified`
+        `${FRONTEND_URL}/verify-otp?email=${encodeURIComponent(user.email)}&status=unverified`
       );
     }
 
     if (user.status !== 'active') {
-      return res.redirect(`${process.env.FRONTEND_URL || 'http://localhost:5173'}/login?error=Account deactivated`);
+      return res.redirect(`${FRONTEND_URL}/login?error=Account deactivated`);
     }
 
     // Issue tokens
@@ -340,11 +342,11 @@ const googleAuthSuccess = async (req, res, next) => {
 
     // Redirect to frontend callback page with the access token
     return res.redirect(
-      `${process.env.FRONTEND_URL || 'http://localhost:5173'}/oauth-success?token=${accessToken}`
+      `${FRONTEND_URL}/oauth-success?token=${accessToken}`
     );
   } catch (error) {
     console.error(`Google auth success error: ${error.message}`);
-    return res.redirect(`${process.env.FRONTEND_URL || 'http://localhost:5173'}/login?error=Server error`);
+    return res.redirect(`${FRONTEND_URL}/login?error=Server error`);
   }
 };
 
@@ -368,7 +370,7 @@ const forgotPassword = async (req, res, next) => {
       { expiresIn: '10m' }
     );
 
-    const resetUrl = `${process.env.FRONTEND_URL || 'http://localhost:5173'}/reset-password?token=${resetToken}`;
+    const resetUrl = `${FRONTEND_URL}/reset-password?token=${resetToken}`;
 
     await sendResetPasswordEmail(user.email, resetUrl);
 
