@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const passport = require('passport');
+const mongoose = require('mongoose');
 const connectDB = require('./config/db');
 const { errorHandler } = require('./middleware/errorMiddleware');
 
@@ -13,6 +14,29 @@ require('./config/passport');
 connectDB();
 
 const app = express();
+
+// Reconnect DB on serverless cold start if needed
+app.use(async (req, res, next) => {
+  if (mongoose.connection.readyState !== 1) {
+    await connectDB();
+  }
+  next();
+});
+
+// API root status
+app.get('/api', (req, res) => {
+  res.status(200).json({
+    success: true,
+    message: 'Company Management System API is running.',
+    dbConnected: mongoose.connection.readyState === 1,
+    env: {
+      frontendUrl: Boolean(process.env.FRONTEND_URL),
+      mongoUri: Boolean(process.env.MONGO_URI),
+      jwtSecret: Boolean(process.env.JWT_SECRET),
+      jwtRefreshSecret: Boolean(process.env.JWT_REFRESH_SECRET),
+    }
+  });
+});
 
 // Middlewares
 app.use(cors({
