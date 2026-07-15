@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams, Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import { API_URL } from '../../services/api';
 import { Shield, Mail, Lock, AlertCircle, ArrowRight } from 'lucide-react';
 
 const Login = () => {
   const { login, authError, clearError } = useAuth();
   const navigate = useNavigate();
-  const apiBaseUrl = (import.meta.env.VITE_API_URL || 'https://company-management-system-nocn.vercel.app/api').replace(/\/$/, '');
+  const apiBaseUrl = API_URL;
   const [searchParams] = useSearchParams();
 
   const [email, setEmail] = useState('');

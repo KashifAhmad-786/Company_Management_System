@@ -47,7 +47,7 @@ app.get('/', (req, res) => {
 // Centralized Error Middleware
 app.use(errorHandler);
 
-const PORT = process.env.PORT || 5000;
+const PORT = parseInt(process.env.PORT, 10) || 5000;
 
 if (require.main === module) {
   app.listen(PORT, () => {
