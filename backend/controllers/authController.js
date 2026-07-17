@@ -26,8 +26,8 @@ const generateRefreshToken = (user) => {
 const sendRefreshTokenCookie = (res, token) => {
   res.cookie('refreshToken', token, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'strict',
+    secure: true,          // Always true — Vercel runs on HTTPS
+    sameSite: 'none',      // Required for cross-origin (frontend ↔ backend on different Vercel domains)
     maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
   });
 };
